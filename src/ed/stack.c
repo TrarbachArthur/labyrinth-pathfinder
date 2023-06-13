@@ -22,7 +22,7 @@ bool stack_empty(Stack *stack) {
 }
 
 void *stack_pop(Stack *stack) {
-    deque_pop_front(stack->deque);
+    return deque_pop_front(stack->deque);
 }
 
 void stack_destroy(Stack *stack) {
