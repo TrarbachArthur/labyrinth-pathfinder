@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "deque.h"
-#include "queue.h"
+#include "stack.h"
 
 struct Stack {
     Deque* deque;

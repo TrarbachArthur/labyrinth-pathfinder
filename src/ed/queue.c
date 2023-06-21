@@ -8,7 +8,7 @@ struct Queue {
 
 Queue *queue_construct() {
     Queue *queue = calloc(1, sizeof(Queue));
-    queue->deque = deque_construct(deque);
+    queue->deque = deque_construct();
 
     return queue;
 }
