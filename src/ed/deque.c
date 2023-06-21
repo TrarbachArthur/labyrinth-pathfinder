@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "deque.h"
 
 typedef struct node {
@@ -23,8 +24,8 @@ void node_destroy(Node* node) {
 struct Deque {
     Node *first;
     Node *last;
-    size_t size;
-}
+    int size;
+};
 
 // criacao do deque
 Deque *deque_construct(void) {
@@ -52,7 +53,7 @@ void deque_push_back(Deque *d, void *val) {
 void deque_push_front(Deque *d, void *val) {
     Node *new_node = node_construct(val);
 
-    if (d->first = NULL) {
+    if (d->first == NULL) {
         d->first = d->last = new_node;
     }
     else {
@@ -68,11 +69,11 @@ void *deque_pop_back(Deque *d) {
     void *data;
 
     if (d->size == 0) {
-        printf("Error: Deque is empty!\n")
+        printf("Error: Deque is empty!\n");
         return NULL;
     }
     
-    aux = d->last
+    aux = d->last;
     data = aux->data;
     
     if (d->first == d->last) {
@@ -93,11 +94,11 @@ void *deque_pop_front(Deque *d) {
     void *data;
 
     if (d->size == 0) {
-        printf("Error: Deque is empty!\n")
+        printf("Error: Deque is empty!\n");
         return NULL;
     }
 
-    aux = d->first
+    aux = d->first;
     data = aux->data;
     
     if (d->first == d->last) {
@@ -125,14 +126,16 @@ void *deque_get(Deque *d, int idx) {
         return NULL;
     }
 
+    Node* node = NULL;
+
     if (idx < (d->size/2)) {
-        Node *node = d->first;
+        node = d->first;
         for (int i = 0; i < idx; i++) {
             node = node->next;
         }
     }
     else {
-        Node *node = d->last;
+        node = d->last;
         for (int i = d->size-1; i > idx; i--) {
             node = node->prev;
         }
