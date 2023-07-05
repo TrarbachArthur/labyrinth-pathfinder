@@ -6,13 +6,14 @@
 
 typedef struct {
     double priority;
-    void* data;
+    void *data;
 } Node;
 
 struct Heap {
     int capacity;
     int size;
-    Node* nodes;
+    Node *nodes;
+    HashTable *ht;
 };
 
 Heap *heap_construct() {

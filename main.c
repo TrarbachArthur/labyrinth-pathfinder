@@ -4,6 +4,8 @@
 #include "src/search/labirinto.h"
 #include "src/search/algorithms.h"
 
+#include "src/ed/heap.h"
+
 void print_result(ResultData *result)
 {
     if (!result->sucesso)
@@ -35,6 +37,7 @@ void mostra_caminho(Labirinto *l, ResultData *result, Celula inicio, Celula fim)
 
 int main()
 {
+    /*
     char arquivo_labirinto[100];
     char algoritmo[100];
     Celula inicio, fim;
@@ -55,6 +58,18 @@ int main()
     labirinto_destruir(lab);
     if (result.caminho != NULL)
         free(result.caminho);
+    */
 
+    Heap* heap = heap_construct();
+
+    for (int i = 0; i < 8; i++) {
+        heap_push(heap, NULL, i);;
+    }
+
+    for (int i = 0; i < 6; i++) {
+        heap_pop(heap);
+    }
+
+    heap_destroy(heap);
     return 0;
 }
