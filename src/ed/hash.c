@@ -67,23 +67,41 @@ void *hash_table_get(HashTable *h, void *key) {
 void *hash_table_pop(HashTable *h, void *key) {
     HashTableItem *item = hash_table_get(h, key);
     int idx = h->hash_fn(h, key);
+    void *val = NULL;
+
+    if (item) val = item->val;
+
     forward_list_remove(h->buckets[idx], item);
     h->num_elem--;
 
-    if (h->buckets[idx] == NULL) h->used_buckets--;
-
-    if (item) return item->val;
-    return NULL;
+    if (forward_list_size(h->buckets[idx]) == 0) {
+        h->used_buckets--;
+        free(h->buckets[idx];
+    }
+    
+    return val;
 }
 
 // numero de buckets
-int hash_table_size(HashTable *h);
+int hash_table_size(HashTable *h) {
+    return h->used_buckets;
+}
 
 // numero de elementos inseridos
-int hash_table_num_elems(HashTable *h);
+int hash_table_num_elems(HashTable *h) {
+    return h->num_elem;
+}
 
 // libera o espaco alocado para a tabela hash
-void hash_table_destroy(HashTable *h);
+void hash_table_destroy(HashTable *h) {
+    for (int i = 0; i < h->table_size; i++) {
+        if (h->buckets[i]) {
+            forward_list_destroy(h->buckets[i]);
+        }
+    }
+    free(h->buckets);
+    free(h);
+}
 
 // cria um novo iterador para a tabela hash
 HashTableIterator *hash_table_iterator(HashTable *h);

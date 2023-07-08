@@ -16,11 +16,12 @@ struct Heap {
     HashTable *ht;
 };
 
-Heap *heap_construct() {
+Heap *heap_construct(HashTable *h) {
     Heap *heap = calloc(1, sizeof(Heap));
     heap->capacity = START_SIZE;
     heap->size = 0;
     heap->nodes = calloc(heap->capacity, sizeof(Node));
+    heap->ht = h;
 
     return heap;
 }
@@ -37,7 +38,7 @@ void heapifyUp(Heap *heap) {
     int parentPos = (int) (pos-1) / 2;
     Node aux = heap->nodes[pos];
 
-    while (pos > 0 && aux.priority > heap->nodes[parentPos].priority) {
+    while (pos > 0 && aux.priority < heap->nodes[parentPos].priority) {
         heap->nodes[pos] = heap->nodes[parentPos];
         pos = parentPos;
         parentPos = (int) (pos-1) / 2;
@@ -54,13 +55,13 @@ void heapifyDown(Heap *heap) {
         int right = (pos*2) + 2;
         index = left;
         if (right < heap->size) {
-            if (heap->nodes[left].priority < heap->nodes[right].priority) {
+            if (heap->nodes[left].priority > heap->nodes[right].priority) {
                 index = right;
             }
         }
-        if (aux.priority >= heap->nodes[index].priority) break;
+        if (aux.priority <= heap->nodes[index].priority) break;
 
-        printf("Troquei %d e %d\n", pos, index);
+        //printf("Troquei %d e %d\n", pos, index);
 
         heap->nodes[pos] = heap->nodes[index];
         pos = index; 

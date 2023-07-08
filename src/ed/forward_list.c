@@ -103,8 +103,24 @@ ForwardList *forward_list_reverse(ForwardList *l);
 void forward_list_clear(ForwardList *l);
 
 void forward_list_remove(ForwardList *l, data_type val) {
-    // TODO
-    // Remember to free list when empty
+    Node *prev = NULL
+    Node *curr = l->head;
+
+    while (node != NULL) {
+        if (node->value == val) {
+            if (prev == NULL) {
+                l->head = curr->next;
+            }
+            else {
+                prev->next = curr->next;
+            }
+            node_destroy(curr);
+            l->size--;
+            break;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
 }
 
 void forward_list_unique(ForwardList *l);
@@ -117,4 +133,5 @@ void forward_list_destroy(ForwardList *l) {
     while (l->size) {
         node_destroy(forward_list_pop_front(l));
     }
+    free(l);
 }
