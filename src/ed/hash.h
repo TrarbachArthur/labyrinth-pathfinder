@@ -6,6 +6,7 @@ typedef struct HashTable HashTable;
 
 typedef int (*HashFunction)(HashTable *, void *);
 typedef int (*CmpFunction)(void *k1, void *k2);
+typedef void (*HashFree)(void *);
 
 typedef struct
 {
@@ -26,7 +27,7 @@ typedef struct HashTableIterator HashTableIterator;
  * @return HashTable*
  * Retorna o ponteiro da tabela hash recém alocada.
  */
-HashTable *hash_table_construct(int table_size, HashFunction hash_fn, CmpFunction cmp_fn);
+HashTable *hash_table_construct(int table_size, HashFunction hash_fn, CmpFunction cmp_fn, HashFree free_key, HashFree free_val);
 
 // funcao para insercao/atualizacao de pares chave-valor em O(1).
 // Se a chave ja existir, atualiza o valor e retorna o valor antigo para permitir desalocacao.

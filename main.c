@@ -1,10 +1,8 @@
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "src/search/labirinto.h"
 #include "src/search/algorithms.h"
-
-#include "src/ed/heap.h"
 
 void print_result(ResultData *result)
 {
@@ -37,7 +35,6 @@ void mostra_caminho(Labirinto *l, ResultData *result, Celula inicio, Celula fim)
 
 int main()
 {
-    /*
     char arquivo_labirinto[100];
     char algoritmo[100];
     Celula inicio, fim;
@@ -45,31 +42,34 @@ int main()
     Labirinto *lab;
 
     scanf("%s", arquivo_labirinto);
-    scanf("%d %d", &inicio.x, &inicio.y);
-    scanf("%d %d", &fim.x, &fim.y);
+    scanf("%d %d", &inicio.y, &inicio.x);
+    scanf("%d %d", &fim.y, &fim.x);
     scanf("\n%s", algoritmo);
 
     lab = labirinto_carregar(arquivo_labirinto);
 
-    result = dummy_search(lab, inicio, fim);
+    if (!strcmp(algoritmo, "BFS"))
+        result = breadth_first_search(lab, inicio, fim);
+    else if (!strcmp(algoritmo, "DFS"))
+        result = depth_first_search(lab, inicio, fim);
+    else if (!strcmp(algoritmo, "A*"))
+        result = a_star(lab, inicio, fim);
+    else if (!strcmp(algoritmo, "DUMMY"))
+        result = dummy_search(lab, inicio, fim);
+    else
+    {
+        printf("Algoritmo desconhecido: %s\n", algoritmo);
+        exit(1);
+    }
+
     print_result(&result);
-    mostra_caminho(lab, &result, inicio, fim);
+
+    // descomente para visualizar informacoes de debug no labirinto
+    // mostra_caminho(lab, &result, inicio, fim);
 
     labirinto_destruir(lab);
     if (result.caminho != NULL)
         free(result.caminho);
-    */
 
-    Heap* heap = heap_construct();
-
-    for (int i = 0; i < 8; i++) {
-        heap_push(heap, NULL, i);;
-    }
-
-    for (int i = 0; i < 6; i++) {
-        heap_pop(heap);
-    }
-
-    heap_destroy(heap);
     return 0;
 }

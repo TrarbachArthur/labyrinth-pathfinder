@@ -70,7 +70,7 @@ void heapifyDown(Heap *heap) {
     heap->nodes[pos] = aux;
 }
 
-void heap_push(Heap *heap, void *data, double priority) {
+void* heap_push(Heap *heap, void *data, double priority) {
     if (heap->size >= heap->capacity) {
         heap->capacity *= 2;
         heap->nodes = (Node*) realloc(heap->nodes, heap->capacity * sizeof(Node));
@@ -93,7 +93,7 @@ void *heap_max(Heap *heap) {
     return heap->nodes[0].data;
 }
 
-double heap_max_priority(Heap *heap) {
+double heap_min_priority(Heap *heap) {
     return heap->nodes[0].priority;
 }
 

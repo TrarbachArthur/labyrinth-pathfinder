@@ -3,18 +3,6 @@
 #include <stdlib.h>
 
 #include "forward_list.h"
-typedef struct Node
-{
-    data_type value;
-    struct Node *next;
-} Node;
-
-typedef struct
-{
-    Node *head;
-    Node *last;
-    int size;
-} ForwardList;
 
 Node *node_construct(data_type value, Node *next) {
     Node *node = calloc(1, sizeof(Node));
@@ -45,8 +33,9 @@ data_type forward_list_find(ForwardList *l, void *key, int (*cmp_fn)(data_type d
     Node *node = l->head;
 
     while (node) {
-        if (cmp_fn(node->value, key) == 0) return node->value;
-
+        if (cmp_fn(node->value, key) == 0){
+            return node->value;
+        }
         node = node->next;
     }
 
@@ -96,6 +85,8 @@ data_type forward_list_pop_front(ForwardList *l) {
     l->head = node->next;
     l->size--;
     node_destroy(node);
+
+    return aux;
 }
 
 ForwardList *forward_list_reverse(ForwardList *l);
@@ -103,11 +94,11 @@ ForwardList *forward_list_reverse(ForwardList *l);
 void forward_list_clear(ForwardList *l);
 
 void forward_list_remove(ForwardList *l, data_type val) {
-    Node *prev = NULL
+    Node *prev = NULL;
     Node *curr = l->head;
 
-    while (node != NULL) {
-        if (node->value == val) {
+    while (curr != NULL) {
+        if (curr->value == val) {
             if (prev == NULL) {
                 l->head = curr->next;
             }

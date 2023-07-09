@@ -25,5 +25,16 @@ clean:
 	rm -f main libed.a libsearch.a $(LIBSEARCH_DEPS) $(LIBED_DEPS)
 	
 run:
-	./main
+	./hash_main
 
+heap: heap_main.c libed.a libsearch.a 
+	gcc $(FLAGS) -o heap_main heap_main.c -I src/search -I src/ed -L . -led -lsearch -lm
+	./heap_main
+
+hash: hash_main.c libed.a libsearch.a 
+	gcc $(FLAGS) -o hash_main hash_main.c -I src/search -I src/ed -L . -led -lsearch -lm
+	./hash_main
+
+deque: deque_main.c libed.a libsearch.a 
+	gcc $(FLAGS) -o deque_main deque_main.c -I src/search -I src/ed -L . -led -lsearch -lm
+	./deque_main
