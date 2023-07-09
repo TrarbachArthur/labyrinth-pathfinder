@@ -6,9 +6,9 @@ struct Queue {
     Deque* deque;
 };
 
-Queue *queue_construct() {
+Queue *queue_construct(DequeFree free_fn) {
     Queue *queue = calloc(1, sizeof(Queue));
-    queue->deque = deque_construct();
+    queue->deque = deque_construct(free_fn);
 
     return queue;
 }

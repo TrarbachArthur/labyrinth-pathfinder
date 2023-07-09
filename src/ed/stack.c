@@ -6,9 +6,9 @@ struct Stack {
     Deque* deque;
 };
 
-Stack *stack_construct() {
+Stack *stack_construct(DequeFree free_fn) {
     Stack* stack = calloc(1, sizeof(Stack));
-    stack->deque = deque_construct();
+    stack->deque = deque_construct(free_fn);
 
     return stack;
 }

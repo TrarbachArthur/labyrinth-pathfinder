@@ -6,7 +6,7 @@
 
 typedef struct Stack Stack;
 
-Stack *stack_construct();
+Stack *stack_construct(DequeFree free_fn);
 void stack_push(Stack *stack, void *data);
 bool stack_empty(Stack *stack);
 void *stack_pop(Stack *stack);

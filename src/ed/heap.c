@@ -83,6 +83,8 @@ void* heap_push(Heap *heap, void *data, double priority) {
     heap->size++;
 
     heap_print(heap);
+
+    return NULL;
 }
 
 bool heap_empty(Heap *heap) {

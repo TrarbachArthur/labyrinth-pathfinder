@@ -6,7 +6,7 @@
 
 typedef struct Queue Queue;
 
-Queue *queue_construct();
+Queue *queue_construct(DequeFree free_fn);
 void queue_push(Queue *queue, void *data);
 bool queue_empty(Queue *queue);
 void *queue_pop(Queue *queue);

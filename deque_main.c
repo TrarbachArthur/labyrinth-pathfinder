@@ -21,11 +21,15 @@ void celula_free(Celula *c)
     free(c);
 }
 
+void free_fn (void *cel) {
+    celula_free(cel);
+}
+
 int main()
 {
     int i, n, x, y;
     char cmd[10];
-    Deque *d = deque_create();
+    Deque *d = deque_construct(free_fn);
 
     scanf("%d", &n);
 

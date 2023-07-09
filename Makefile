@@ -25,7 +25,7 @@ clean:
 	rm -f main libed.a libsearch.a $(LIBSEARCH_DEPS) $(LIBED_DEPS)
 	
 run:
-	./hash_main
+	./main
 
 heap: heap_main.c libed.a libsearch.a 
 	gcc $(FLAGS) -o heap_main heap_main.c -I src/search -I src/ed -L . -led -lsearch -lm
