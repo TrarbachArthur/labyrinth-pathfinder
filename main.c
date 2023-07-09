@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "src/search/labirinto.h"
-#include "src/search/algorithms.h"
+#include "src/ed/labirinto.h"
+#include "src/ed/algorithms.h"
 
 void print_result(ResultData *result)
 {
@@ -13,7 +13,7 @@ void print_result(ResultData *result)
     }
 
     for (int i = 0; i < result->tamanho_caminho; i++)
-        printf("%d %d\n", result->caminho[i].x, result->caminho[i].y);
+        printf("%d %d\n", result->caminho[i].y, result->caminho[i].x);
 
     printf("%.2lf\n", result->custo_caminho);
     printf("%d\n", result->tamanho_caminho);
@@ -65,7 +65,7 @@ int main()
     print_result(&result);
 
     // descomente para visualizar informacoes de debug no labirinto
-    // mostra_caminho(lab, &result, inicio, fim);
+    //mostra_caminho(lab, &result, inicio, fim);
 
     labirinto_destruir(lab);
     if (result.caminho != NULL)

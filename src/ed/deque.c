@@ -177,7 +177,8 @@ void *deque_get(Deque *d, int idx) {
 
 // libera o espaco alocado para o deque
 void deque_destroy(Deque *d) {
-    for (int i = 0; i < deque_size(d); i++) {
+    int size = deque_size(d);
+    for (int i = 0; i < size; i++) {
         data_type val = deque_pop_back(d);
 
         if (d->free_fn) {

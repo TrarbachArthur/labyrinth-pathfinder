@@ -5,6 +5,7 @@
 #include "types.h"
 
 typedef struct Stack Stack;
+typedef void (*DequeFree)(void *);
 
 Stack *stack_construct(DequeFree free_fn);
 void stack_push(Stack *stack, void *data);

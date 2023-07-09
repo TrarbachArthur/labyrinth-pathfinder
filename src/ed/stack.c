@@ -14,7 +14,7 @@ Stack *stack_construct(DequeFree free_fn) {
 }
 
 void stack_push(Stack *stack, void *data) {
-    deque_push_front(stack->deque, data);
+    deque_push_back(stack->deque, data);
 }
 
 bool stack_empty(Stack *stack) {
@@ -22,7 +22,7 @@ bool stack_empty(Stack *stack) {
 }
 
 void *stack_pop(Stack *stack) {
-    return deque_pop_front(stack->deque);
+    return deque_pop_back(stack->deque);
 }
 
 void stack_destroy(Stack *stack) {
