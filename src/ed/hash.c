@@ -113,6 +113,7 @@ void *hash_table_pop(HashTable *h, void *key) {
         h->buckets[idx] = NULL;
     }
 
+    free(item);
     // if (h->free_key) {
     //     h->free_key(item->key);
     // }
