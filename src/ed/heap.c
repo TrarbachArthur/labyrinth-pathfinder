@@ -110,7 +110,6 @@ void _hash_table_set(HashTable *h, void *data, int index){
 
 void* heap_push(Heap *heap, void *data, double priority) {
     int *index = (int *)hash_table_get(heap->ht, data);
-    //printf("Push\n");
 
     if (index) {
         //printf("Got %lf %lf\n", heap->nodes[*index].priority, priority);
@@ -129,6 +128,7 @@ void* heap_push(Heap *heap, void *data, double priority) {
             heapifyUp(heap, *index);
             data = aux;
         }
+        //printf("Repeated\n");
         return data;
     }
     

@@ -21,7 +21,7 @@ Deque *deque_construct(DequeFree free_fn) {
     d->block_size = 5;
     d->start_idx = d->end_idx = 0;
     
-    d->blocks_allocated = 5;
+    d->blocks_allocated = 15;
     d->blocks = calloc(d->blocks_allocated, sizeof(data_type *));
     d->initial_block_idx = d->final_block_idx = (int)(d->blocks_allocated / 2);
     

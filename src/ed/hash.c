@@ -61,7 +61,7 @@ void *hash_table_set(HashTable *h, void *key, void *val) {
 void print_fn(data_type data) {
     HashTableItem* info = (HashTableItem*) data;
 
-    printf("%d\n", *(int *)info->val);
+    printf("%d -> ", *(int *)info->val);
 }
 
 void *_hash_table_get_pair(HashTable *h, void *key) {
@@ -90,6 +90,7 @@ void *hash_table_get(HashTable *h, void *key) {
         if (item) {
             //printf("Got here %d %d\n", idx, *(int *)item->val);
             return item->val;
+            //printf("Repeated\n");
         }
     }
     

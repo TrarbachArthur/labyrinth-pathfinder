@@ -78,6 +78,7 @@ int main()
             printf("%d %d %d\n", cel->x, cel->y, priority);
             celula_destroy(cel);
         }
+        //printf("%d\n", i);
     }
 
     hash_table_destroy(h);

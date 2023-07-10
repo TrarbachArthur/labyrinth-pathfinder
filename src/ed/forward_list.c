@@ -34,6 +34,7 @@ data_type forward_list_find(ForwardList *l, void *key, int (*cmp_fn)(data_type d
 
     while (node) {
         if (cmp_fn(node->value, key) == 0){
+            //printf("Found\n");
             return node->value;
         }
         node = node->next;
@@ -64,6 +65,7 @@ void forward_list_print(ForwardList *l, void (*print_fn)(data_type)) {
         print_fn(node->value);
         node = node->next;
     }
+    printf("\n");
 }
 
 data_type forward_list_get(ForwardList *l, int i) {

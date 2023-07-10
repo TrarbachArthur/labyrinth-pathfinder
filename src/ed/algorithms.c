@@ -86,12 +86,85 @@ int celula_cmp(void *c1, void *c2)
         return 1;
 }
 
+int celula_hash_cmp(void *c1, void *c2) {
+    HashTableItem *d1 = (HashTableItem *)c1;
+    Celula *a = (Celula *)d1->key;
+    Celula *b = (Celula *)c2;
+    
+    if (a->x == b->x && a->y == b->y) {
+        return 0;
+    }
+    else
+        return 1;
+}
+
 int directions[8][2] = {{0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}};
 
 ResultData a_star(Labirinto *l, Celula inicio, Celula fim)
 {
-    // TODO!
-    return _default_result();
+    ResultData result = _default_result();
+    int max_length = labirinto_n_linhas(l) * labirinto_n_colunas(l);
+
+    result.caminho = calloc(max_length, sizeof(Celula));
+
+    HashTable *ht = hash_table_construct(101, celula_hash, celula_hash_cmp, free, free);
+    Heap *heap = heap_construct(ht);
+
+    Celula *curr = celula_create(inicio.x, inicio.y, NULL);
+    curr->g = 0;
+    curr->h = _cell_distance(curr, &fim);
+
+    heap_push(heap, curr, curr->g + curr->h);
+
+    Deque *deque = deque_construct(free);
+
+    while (!heap_empty(heap)) {
+        curr = heap_pop(heap);
+        labirinto_atribuir(l, curr->y, curr->x, EXPANDIDO);
+        result.nos_expandidos++;
+
+        deque_push_back(deque, curr);
+
+        if (celula_cmp(curr, &fim) == 0) {
+            result.sucesso = 1;
+            result = _process_path(result, curr);
+            break;
+        }
+
+        for (int i = 0; i < 8; i++) {
+            int x = curr->x + directions[i][0];
+            int y = curr->y + directions[i][1];
+
+            if (x >= 0 && y >= 0 && x < labirinto_n_colunas(l) && y < labirinto_n_linhas(l)) {
+                TipoCelula tipo = labirinto_obter(l, y, x);
+
+                if (tipo != EXPANDIDO && tipo != OCUPADO) {
+                    labirinto_atribuir(l, y, x, FRONTEIRA);
+                    
+                    Celula *cel = celula_create(x, y, curr);
+                    cel->g = curr->g + _cell_distance(curr, cel);
+                    cel->h = _cell_distance(cel, &fim);
+
+                    cel = heap_push(heap, cel, cel->g + cel->h);
+
+                    if (cel) {
+                        celula_destroy(cel);
+                    }
+                }
+            }
+        }
+    }
+
+    if (result.sucesso == 0) {
+        free(result.caminho);
+        result.caminho = NULL;
+    }
+
+    heap_destroy(heap);
+    hash_table_destroy(ht);
+    deque_destroy(deque);
+
+    return result;
 }
 
 ResultData breadth_first_search(Labirinto *l, Celula inicio, Celula fim)
