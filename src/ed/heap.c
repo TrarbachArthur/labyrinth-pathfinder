@@ -33,17 +33,32 @@ void heap_print(Heap *heap) {
     printf("\n");
 }
 
-void heapifyUp(Heap *heap) {
-    int pos = heap->size;
+void heapifyUp(Heap *heap, int idx) {
+    int pos = idx;
     int parentPos = (int) (pos-1) / 2;
     Node aux = heap->nodes[pos];
 
     while (pos > 0 && aux.priority < heap->nodes[parentPos].priority) {
         heap->nodes[pos] = heap->nodes[parentPos];
+        
+        int *new_idx = calloc(1, sizeof(int));
+        *new_idx = pos;
+        void *tmp_idx = hash_table_set(heap->ht, heap->nodes[pos].data, new_idx);
+        if (tmp_idx) {
+            free(tmp_idx);
+        }
+
         pos = parentPos;
         parentPos = (int) (pos-1) / 2;
     }
     heap->nodes[pos] = aux;
+
+    int *new_idx = calloc(1, sizeof(int));
+    *new_idx = pos;
+    void *tmp_idx = hash_table_set(heap->ht, heap->nodes[pos].data, new_idx);
+    if (tmp_idx) {
+        free(tmp_idx);
+    }
 }
 
 void heapifyDown(Heap *heap) {
@@ -64,13 +79,59 @@ void heapifyDown(Heap *heap) {
         //printf("Troquei %d e %d\n", pos, index);
 
         heap->nodes[pos] = heap->nodes[index];
+
+        int *new_idx = calloc(1, sizeof(int));
+        *new_idx = pos;
+        void *tmp_idx = hash_table_set(heap->ht, heap->nodes[pos].data, new_idx);
+        if (tmp_idx) {
+            free(tmp_idx);
+        }
+
         pos = index; 
     }
 
     heap->nodes[pos] = aux;
+
+    int *new_idx = calloc(1, sizeof(int));
+    *new_idx = pos;
+    void *tmp_idx = hash_table_set(heap->ht, heap->nodes[pos].data, new_idx);
+    if (tmp_idx) {
+        free(tmp_idx);
+    }
+}
+
+void _hash_table_set(HashTable *h, void *data, int index){
+    int *new_index = (int *)malloc(sizeof(int));
+    *new_index = index;
+    new_index = hash_table_set(h, data, new_index);
+    if (new_index != NULL)
+        free(new_index); 
 }
 
 void* heap_push(Heap *heap, void *data, double priority) {
+    int *index = (int *)hash_table_get(heap->ht, data);
+    //printf("Push\n");
+
+    if (index) {
+        //printf("Got %lf %lf\n", heap->nodes[*index].priority, priority);
+        if (priority < heap->nodes[*index].priority) {
+            void* aux = heap->nodes[*index].data;
+            heap->nodes[*index].priority = priority;
+            heap->nodes[*index].data = data;
+
+            int *old_val = hash_table_pop(heap->ht, aux);
+
+            void *tmp_idx = hash_table_set(heap->ht, data, old_val);
+            if (tmp_idx) {
+                free(tmp_idx);
+            }
+
+            heapifyUp(heap, *index);
+            data = aux;
+        }
+        return data;
+    }
+    
     if (heap->size >= heap->capacity) {
         heap->capacity *= 2;
         heap->nodes = (Node*) realloc(heap->nodes, heap->capacity * sizeof(Node));
@@ -79,10 +140,17 @@ void* heap_push(Heap *heap, void *data, double priority) {
     heap->nodes[heap->size].data = data;
     heap->nodes[heap->size].priority = priority;
 
-    heapifyUp(heap);
+    int *new_idx = calloc(1, sizeof(int));
+    *new_idx = heap->size;
+    void *tmp_idx = hash_table_set(heap->ht, heap->nodes[*new_idx].data, new_idx);
+    if (tmp_idx) {
+        free(tmp_idx);
+    }
+
+    heapifyUp(heap, heap->size);
     heap->size++;
 
-    heap_print(heap);
+    //heap_print(heap);
 
     return NULL;
 }
@@ -109,10 +177,16 @@ void *heap_pop(Heap *heap) {
     // Setting last element as first for heapify
     heap->nodes[0] = heap->nodes[heap->size - 1];
     heap->size--;
+    
+    void *aux = hash_table_pop(heap->ht, data);
+    
+    if (aux) {
+        free(aux);
+    }
 
     heapifyDown(heap);
 
-    heap_print(heap);
+    //heap_print(heap);
 
     return data;
 }

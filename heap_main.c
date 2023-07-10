@@ -36,11 +36,13 @@ int celula_hash(HashTable *h, void *key)
 
 int celula_cmp(void *c1, void *c2)
 {
-    Celula *a = (Celula *)c1;
+    HashTableItem *d1 = (HashTableItem *)c1;
+    Celula *a = (Celula *)d1->key;
     Celula *b = (Celula *)c2;
-
-    if (a->x == b->x && a->y == b->y)
+    
+    if (a->x == b->x && a->y == b->y) {
         return 0;
+    }
     else
         return 1;
 }
@@ -50,7 +52,7 @@ int main()
     int i, n, x, y, priority;
     char cmd[10];
 
-    HashTable *h = hash_table_construct(19, celula_hash, celula_cmp, hash_key_destroy, free);
+    HashTable *h = hash_table_construct(19, celula_hash, celula_cmp, free, free);
     Heap *heap = heap_construct(h);
 
     scanf("%d", &n);
@@ -78,18 +80,6 @@ int main()
         }
     }
 
-    HashTableIterator *it = hash_table_iterator(h);
-
-    while (!hash_table_iterator_is_over(it))
-    {
-        HashTableItem *item = hash_table_iterator_next(it);
-        Celula *cel = (Celula *)item->key;
-        int *pos = (int *)item->val;
-        celula_destroy(cel);
-        free(pos);
-    }
-
-    hash_table_iterator_destroy(it);
     hash_table_destroy(h);
     heap_destroy(heap);
 

@@ -64,22 +64,41 @@ void print_fn(data_type data) {
     printf("%d\n", *(int *)info->val);
 }
 
+void *_hash_table_get_pair(HashTable *h, void *key) {
+    int idx = h->hash_fn(h, key);
+    ForwardList *bucket = h->buckets[idx];
+    if (bucket) {
+        //forward_list_print(bucket, print_fn);
+        HashTableItem *item = forward_list_find(bucket, key, h->cmp_fn);
+        // printf("Found\n");
+        // printf("%d\n", *(int *)item->val);
+        if (item) return item;
+    }
+
+    return NULL;
+}
+
 // retorna o valor associado com a chave key ou NULL se ela nao existir em O(1).
 void *hash_table_get(HashTable *h, void *key) {
     int idx = h->hash_fn(h, key);
     ForwardList *bucket = h->buckets[idx];
-    //forward_list_print(bucket, print_fn);
-    HashTableItem *item = forward_list_find(bucket, key, h->cmp_fn);
-    // printf("Found\n");
-    // printf("%d\n", *(int *)item->val);
-    if (item) return item->val;
-
+    if (bucket) {
+        //forward_list_print(bucket, print_fn);
+        HashTableItem *item = forward_list_find(bucket, key, h->cmp_fn);
+        // printf("Found\n");
+        // printf("%d\n", *(int *)item->val);
+        if (item) {
+            //printf("Got here %d %d\n", idx, *(int *)item->val);
+            return item->val;
+        }
+    }
+    
     return NULL;
 }
 
 // remove o par chave-valor e retorna o valor ou NULL se nao existir tal chave em O(1).
 void *hash_table_pop(HashTable *h, void *key) {
-    HashTableItem *item = hash_table_get(h, key);
+    HashTableItem *item = _hash_table_get_pair(h, key);
     int idx = h->hash_fn(h, key);
     void *val = NULL;
 
@@ -94,9 +113,9 @@ void *hash_table_pop(HashTable *h, void *key) {
         h->buckets[idx] = NULL;
     }
 
-    if (h->free_key) {
-        h->free_key(item->key);
-    }
+    // if (h->free_key) {
+    //     h->free_key(item->key);
+    // }
 
     return val;
 }
@@ -117,7 +136,8 @@ void hash_table_destroy(HashTable *h) {
         if (h->buckets[i] != NULL) {
             while (forward_list_size(h->buckets[i])) {
                 HashTableItem* data = (HashTableItem *)forward_list_pop_front(h->buckets[i]);
-                if (h->free_key) h->free_key(data->key);
+                //print_fn(data);
+                //if (h->free_key) h->free_key(data->key);
                 if (h->free_val) h->free_val(data->val);
                 free(data);
             }
@@ -127,53 +147,3 @@ void hash_table_destroy(HashTable *h) {
     free(h->buckets);
     free(h);
 }
-
-// // cria um novo iterador para a tabela hash
-// HashTableIterator *hash_table_iterator(HashTable *h) {
-//     HashTableIterator *it = calloc(1, sizeof(HashTableIterator));
-//     it->ht = h;
-//     it->bucket_idx = hash_table_size(h);
-//     it->table_idx = 0;
-//     it->item = NULL;
-    
-//     return it;
-// }
-
-// // retorna 1 se o iterador chegou ao fim da tabela hash ou 0 caso contrario
-// int hash_table_iterator_is_over(HashTableIterator *it) {
-//     if (it->table_idx >= (hash_table_size(it->ht) - 1) && it->bucket_idx >= (forward_list_size(it->ht->buckets[it->table_idx]) - 1)) {
-//         return 1;
-//     }
-
-//     return 0;
-// }
-
-// // retorna o proximo par chave valor da tabela hash
-// HashTableItem *hash_table_iterator_next(HashTableIterator *it) {
-//     int i;
-//     printf("Cheguei\n");
-//     if (it->bucket_idx >= (forward_list_size(it->ht->buckets[it->table_idx])) - 1) {
-//         it->bucket_idx = 0;
-//         for (i = it->table_idx+1; (i < hash_table_size(it->ht)) && it->ht->buckets[i] == NULL; i++);
-//         it->table_idx = i;
-//     }
-//     else {
-//         it->bucket_idx++;
-//     }
-
-    
-
-//     if (it->table_idx < hash_table_size(it->ht)) {
-//         it->item = forward_list_get(it->ht->buckets[it->table_idx], it->bucket_idx);
-//     }
-//     else {
-//         it->item = NULL;
-//     }
-
-//     return it->item;
-// }
-
-// // desaloca o iterador da tabela hash
-// void hash_table_iterator_destroy(HashTableIterator *it) {
-//     free(it);
-// }

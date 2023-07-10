@@ -10,7 +10,7 @@ LIBSEARCH_DEPS = $(patsubst %.c,%.o,$(wildcard ./src/search/*.c))
 all: main
 
 %.o: %.c %.h
-	gcc $(FLAGS) -c -o $@ $< 
+	gcc $(FLAGS) -c -o $@ $<
 
 libed.a: $(LIBED_DEPS)
 	ar -crs libed.a $(LIBED_DEPS)
